@@ -1,5 +1,5 @@
 library(tm)
-#library(topicmining)
+#library(topicmodels)
 
 
 cwd <- getwd()
