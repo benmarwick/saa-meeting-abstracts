@@ -121,17 +121,18 @@ similar_words <-
 map(time_specific_token, 
     ~find_similar_words_safe(.x, 
                         embedding_matrix, 
-                        n = 50)) %>% 
+                        n = 100)) %>% 
   transpose() %>%
   simplify_all() %>% 
   .$result %>% 
-  names %>% 
-  unique
+  unlist() %>% 
+  names() %>% 
+  unique()
 
 
 library(Rtsne)
 library(ggplot2)
-library(plotly)
+library(ggrepel)
 
 plot_data <- embedding_matrix[row.names(embedding_matrix) %in% c(similar_words, 
                                                                  time_specific_token), ] 
@@ -165,19 +166,21 @@ tsne_plot <-
                arrow=arrow(length=unit(0.3,"cm"), 
                            type = "closed"),
                colour = "red") +
-  geom_text(data = tsne_plot_target_features, 
+  geom_text_repel(data = tsne_plot_target_features, 
             aes(x = V1, 
                 y = V2,
                 label = word),
-            colour = "red") +
+            colour = "red",
+            bg.color = "white", 
+            bg.r = 0.15 ) +
   theme_minimal()
 
 tsne_plot +
   ggtitle(paste0("Semantic shifts in the word '",
                  target_feature,
-  "' in SAA conference abstracts aggregated into ", 
+  "' indicated by word embeddings trained on SAA conference abstracts aggregated into ", 
                  year_interval, 
-                 " year groupings, "))
+                 " year groupings "))
 
 
 
