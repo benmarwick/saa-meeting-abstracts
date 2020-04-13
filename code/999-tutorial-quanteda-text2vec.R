@@ -12,7 +12,7 @@ all_words <-
   types()
 
 # should expect this mean features in each set
-length(all_words)
+length(all_words) # 10052
 
 # these are our three sets that we want to compare, we want to project the
 # change in a few key words on a fixed background of other words
@@ -38,7 +38,7 @@ my_tokens3 <- texts(corpus_3) %>%
          remove_symbols = TRUE,
          remove_numbers = TRUE) 
 
-my_feats1 <- 
+my_feats1 <- #  10052
   dfm(my_tokens1, verbose = TRUE) %>%
   dfm_trim(min_termfreq = 5) %>% 
   dfm_match(all_words) %>% 

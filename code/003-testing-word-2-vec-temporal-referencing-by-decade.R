@@ -32,9 +32,10 @@ map(related_words, ~colSums(all_txts_c_dtm[, .x ]))
 
 year <- names(all_txts)
 
-floor_to_interval    = function(value, interval){ return(value - value %% interval) }
+floor_to_interval <-  function(value, interval){ return(value - value %% interval) }
 
-interval <- floor_to_interval(as.numeric(year), 5)
+year_interval <- 3
+interval <- floor_to_interval(as.numeric(year), year_interval)
 target_feature <- "theory"
 
 time_specific_token <- paste0(target_feature, "_", interval)
@@ -114,8 +115,19 @@ find_similar_words <- function(word, embedding_matrix, n = 5) {
   similarities[,1] %>% sort(decreasing = TRUE) %>% head(n)
 }
 
+find_similar_words_safe <- safely(find_similar_words)
+
 similar_words <- 
-  names(find_similar_words("method", embedding_matrix, n = 100))
+map(time_specific_token, 
+    ~find_similar_words_safe(.x, 
+                        embedding_matrix, 
+                        n = 50)) %>% 
+  transpose() %>%
+  simplify_all() %>% 
+  .$result %>% 
+  names %>% 
+  unique
+
 
 library(Rtsne)
 library(ggplot2)
@@ -124,7 +136,7 @@ library(plotly)
 plot_data <- embedding_matrix[row.names(embedding_matrix) %in% c(similar_words, 
                                                                  time_specific_token), ] 
 tsne <- Rtsne(plot_data, 
-              perplexity = 20, 
+              perplexity = 100, 
               pca = FALSE)
 
 tsne_plot_data <- 
@@ -144,7 +156,7 @@ tsne_plot <-
             aes(x = V1, 
                 y = V2, 
                 label = word), 
-            size = 3) +
+            size = 2) +
   geom_segment(data = tsne_plot_target_features, 
                aes(x = V1, 
                    y = V2,
@@ -153,8 +165,20 @@ tsne_plot <-
                arrow=arrow(length=unit(0.3,"cm"), 
                            type = "closed"),
                colour = "red") +
+  geom_text(data = tsne_plot_target_features, 
+            aes(x = V1, 
+                y = V2,
+                label = word),
+            colour = "red") +
   theme_minimal()
 
 tsne_plot +
-  xlim(-10,-2) 
+  ggtitle(paste0("Semantic shifts in the word '",
+                 target_feature,
+  "' in SAA conference abstracts aggregated into ", 
+                 year_interval, 
+                 " year groupings, "))
+
+
+
 
