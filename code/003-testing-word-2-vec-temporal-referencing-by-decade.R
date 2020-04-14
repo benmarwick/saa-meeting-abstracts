@@ -180,7 +180,8 @@ tsne_plot +
                  target_feature,
   "' indicated by word embeddings trained on SAA conference abstracts aggregated into ", 
                  year_interval, 
-                 " year groupings "))
+                 " year groupings ")) +
+  labs(caption  = "Data and code online at https://github.com/benmarwick/saa-meeting-abstracts")
 
 
 
