@@ -23,22 +23,27 @@ all_txts_c_dtm <-
 
 # investigate the target feature a bit
 
+# we can change these
 related_words <- c("theory", "theories", "theoretical")
 map(related_words, ~colSums(all_txts_c_dtm[, .x ]))
 #  so use the most common one
 
+
+# https://www.aclweb.org/anthology/P19-1044.pdf is our inspiration 
 # in each text we want to replace the target feature (word) with a tagged feature,
-# a time-specific token
+# a time-specific token target word w ∈ Ct with a time-specific token wt
+# E.g., in the corpus for 1920 we replace each occurrence of computer with the string computer1920
 
 year <- names(all_txts)
 
 floor_to_interval <-  function(value, interval){ return(value - value %% interval) }
 
-year_interval <- 3
+year_interval <- 3 # we can change and explore
 interval <- floor_to_interval(as.numeric(year), year_interval)
-target_feature <- "theory"
+target_feature <- "theory" # we can change this
 
-time_specific_token <- paste0(target_feature, "_", interval)
+time_specific_token <- 
+  paste0(target_feature, "_", interval, "_", interval + year_interval, "")
 
 all_txts_updated <- vector("character", length = length(all_txts))
 for(i in seq_len(length(all_txts))){
@@ -115,20 +120,20 @@ find_similar_words <- function(word, embedding_matrix, n = 5) {
   similarities[,1] %>% sort(decreasing = TRUE) %>% head(n)
 }
 
-find_similar_words_safe <- safely(find_similar_words)
+find_similar_words_safe <- 
+  safely(find_similar_words)
 
 similar_words <- 
 map(time_specific_token, 
     ~find_similar_words_safe(.x, 
                         embedding_matrix, 
-                        n = 100)) %>% 
+                        n = 50)) %>% # explore to change the context word quantity 
   transpose() %>%
   simplify_all() %>% 
   .$result %>% 
   unlist() %>% 
   names() %>% 
   unique()
-
 
 library(Rtsne)
 library(ggplot2)
@@ -137,7 +142,7 @@ library(ggrepel)
 plot_data <- embedding_matrix[row.names(embedding_matrix) %in% c(similar_words, 
                                                                  time_specific_token), ] 
 tsne <- Rtsne(plot_data, 
-              perplexity = 100, 
+              perplexity = 30, # explore different values
               pca = FALSE)
 
 tsne_plot_data <- 
@@ -149,7 +154,11 @@ tsne_plot_target_features <-
   tsne$Y %>%
   as.data.frame() %>%
   mutate(word = row.names(plot_data)) %>% 
-  filter(word %in% time_specific_token)
+  filter(word %in% time_specific_token) %>% 
+  mutate(word = str_replace(word, "_", " ")) %>% 
+  mutate(word = str_replace(word, " ", " (")) %>% 
+  mutate(word = str_replace(word, "_", "-")) %>% 
+  mutate(word = str_c(word, ")")) 
   
 tsne_plot <- 
   ggplot() + 
@@ -170,6 +179,7 @@ tsne_plot <-
             aes(x = V1, 
                 y = V2,
                 label = word),
+            size = 3,
             colour = "red",
             bg.color = "white", 
             bg.r = 0.15 ) +
@@ -178,7 +188,7 @@ tsne_plot <-
 tsne_plot +
   ggtitle(paste0("Semantic shifts in the word '",
                  target_feature,
-  "' indicated by word embeddings trained on SAA conference abstracts aggregated into ", 
+  "' indicated by word embeddings\ntrained on SAA conference abstracts aggregated into ", 
                  year_interval, 
                  " year groupings ")) +
   labs(caption  = "Data and code online at https://github.com/benmarwick/saa-meeting-abstracts")

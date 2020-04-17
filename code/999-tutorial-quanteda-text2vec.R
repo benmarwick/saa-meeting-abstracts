@@ -82,10 +82,10 @@ word_vectors1 <- my_main1 + t(my_context1)
 
 glove2 <- GlobalVectors$new(rank = 50, 
                             x_max = 10,
-                            init = list(w_i = glove1$.__enclos_env__$private$w_i, 
-                                        b_i = glove1$.__enclos_env__$private$b_i, 
-                                        w_j = glove1$.__enclos_env__$private$w_j, 
-                                        b_j = glove1$.__enclos_env__$private$b_j))
+                            init = list(w_i = t(my_main1), 
+                                        b_i = glove1$bias_i, 
+                                        w_j = my_context1, 
+                                        b_j = glove1$bias_j))
 
 my_main2 <- glove2$fit_transform(my_fcm2, 
                                  n_iter = 10,
