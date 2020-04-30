@@ -1,0 +1,47 @@
+---
+title: "The Geometry of Archaeological Thought: ..."
+output: bookdown::html_document2
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introduction
+
+# Background
+
+- previous efforts at the history of archaeology (e.g. Bruce Trigger's book)
+- previous efforts at text analysis in archaeology (e.g. bibliometrics, citation networks)
+
+# Methods
+
+- source of the data
+- preparation steps: data cleaning (Cite the quanteda pkg, and things they cite)
+- word embeddings (cite our readings)
+- temporal referencing plots (cite our readings)
+
+# Results
+
+- basic details (e.g. word and abstract counts)
+- word frequency time series
+- TR plots
+
+# Discussion
+
+- ...
+
+# Conclusion
+
+- ...
+
+# Acknowledgements
+
+# References 
+
+<!--- use the bib file --> 
+
+
+
