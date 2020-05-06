@@ -19,7 +19,11 @@ knitr::opts_chunk$set(echo = TRUE)
 # Methods
 
 - source of the data
+We collected abstracts from Society of American Archaeology (SAA) annual meeting programs from 1964 to 2020. The total number of abstracts are 68,176 from 40 annual meetings excluding some years without available abstracts. The source of abstract includes papers, posters, workshop posters, symposium represented by paragraphs. The annual programs are available online at https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. The original format of abstracts on websites includes scanned images for early years and accessible PDF after 2004.
+
 - preparation steps: data cleaning (Cite the quanteda pkg, and things they cite)
+
+
 - word embeddings (cite our readings)
 - temporal referencing plots (cite our readings)
 
