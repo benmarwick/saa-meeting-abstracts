@@ -29,12 +29,12 @@ all_txts_c_dtm <-
 
 #----- change these words
 keywords <-
-  c('model',
-    "explanation",
-    "theory",
-    "hypothesis",
-    "inference",
-    "mechanism")
+  c("experience", 
+    "process", 
+    "community", 
+    "dynamics", 
+    "context", 
+    "compare")
 #----
 
 dfm_keywords <- 
