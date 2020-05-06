@@ -79,7 +79,7 @@ ggplot(data = dfm_keywords_tbl_prop,
   scale_x_continuous(labels = c(seq(1960, 2020, 2)), 
                      breaks = seq(1960, 2020, 2),
                      name = "Year") +
-  scale_y_continuous(name = "Proportion of all words per year",
+  scale_y_continuous(name = "Proportion of all words in all abstracts per year",
                      labels = scales::comma) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, 
@@ -108,13 +108,30 @@ for(i in seq_len(length(all_txts_text_pdf))){
 }
 
 number_of_abstracts_per_year <- 
-tibble(year = names(all_txts_text_pdf),
+tibble(year = parse_number(names(all_txts_text_pdf)),
        number_of_abstracts = unlist(all_txts_text_pdf_tally))
 
-ggplot(number_of_abstracts_per_year,
+# also get count of abstracts from image scans also
+number_of_abstracts_per_year_all_years <- 
+  readxl::read_excel(here::here("data/raw-data/saa-abstracts-tally.xlsx")) %>% 
+  filter(image_or_text == "image") %>% 
+  select(year, number_of_abstracts) %>% 
+  bind_rows(number_of_abstracts_per_year)
+
+# plot abstracts for all years
+ggplot(number_of_abstracts_per_year_all_years,
        aes(year, 
            number_of_abstracts)) +
-  geom_col()
+  geom_col() +
+  scale_x_continuous(labels = c(seq(1960, 2020, 2)), 
+                     breaks = seq(1960, 2020, 2),
+                     name = "Year") +
+  scale_y_continuous(name = "Number of abstracts per year",
+                     labels = scales::comma) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, 
+                                   vjust = 0.5)) 
+
 
 
 
