@@ -1,5 +1,3 @@
-
-
 # Words per year
 
 library(tidyverse)
@@ -63,22 +61,27 @@ dfm_keywords_tbl <-
 dfm_keywords_tbl_prop <- 
 dfm_keywords_tbl %>% 
   left_join(all_txts_c_summary) %>% 
-  mutate(prop = n / Tokens )
+  mutate(prop = n / Tokens ) %>% 
+  group_by(keyword) %>% 
+  mutate(sum_the_word = sum(n)) %>% 
+  mutate(keyword_n = str_c(keyword, " (n = ", sum_the_word, ")"))
 
 # plot of keywords as a proportion of all words per year
 ggplot(data = dfm_keywords_tbl_prop, 
        aes(x = year , 
            y = prop)) +
-  geom_col() +
-  facet_wrap( ~ keyword, 
-              ncol = 1) + #,
-             # scales = "free_y") +
+  geom_point(alpha = 0.3) +
+  geom_smooth(span = 0.475,
+              se = FALSE) +
+  facet_wrap( ~ keyword_n, 
+              ncol = 1,
+             scales = "free_y") +
   scale_x_continuous(labels = c(seq(1960, 2020, 2)), 
                      breaks = seq(1960, 2020, 2),
                      name = "Year") +
   scale_y_continuous(name = "Proportion of all words per year",
                      labels = scales::comma) +
-  theme_bw() +
+  theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, 
                                    vjust = 0.5)) 
 

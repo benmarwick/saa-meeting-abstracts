@@ -29,10 +29,10 @@ all_txts_c_dtm <-
 
 #----- change these words
 keywords <-
-  c('model',
-    "explanation",
-    "theory",
-    "hypothesis",
+  c('agency',
+    "phenomena",
+    "action",
+    "affect",
     "inference",
     "mechanism")
 #----
