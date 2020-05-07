@@ -54,7 +54,7 @@ plot_all_words <-
 # Our key words over time
   
 keywords <- 
-  c('model', "explanation", "theory", "hypothesis", "inference", "mechanism")
+  c("experience", "process", "community", "dynamics", "context", "compare")
 
 dfm_keywords <- 
   dfm_select(all_txts_c_dtm, 
@@ -146,8 +146,5 @@ ggplot(number_of_abstracts_per_year_all_years,
 
 library(patchwork)
 plot_all_words / plot_all_abstracts
-
-
-
 
 

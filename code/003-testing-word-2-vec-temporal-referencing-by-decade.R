@@ -12,6 +12,7 @@ fs::dir_ls(here::here("data/derived-data/"),
 all_txts <- tolower(readtext::readtext(abstract_txt_files))
 names(all_txts) <- map_chr(names(all_txts), ~str_match_all(.x, "\\d{4}")[[1]][1,1])
 
+
 all_txts_c <- corpus(all_txts)
 
 # make a dfm, removing stopwords and maybe applying stemming
@@ -24,7 +25,7 @@ all_txts_c_dtm <-
 # investigate the target feature a bit
 
 # we can change these
-related_words <- c("theory", "theories", "theoretical")
+related_words <- c("mechanism", "mechanisms")
 map(related_words, ~colSums(all_txts_c_dtm[, .x ]))
 #  so use the most common one
 
@@ -38,9 +39,9 @@ year <- names(all_txts)
 
 floor_to_interval <-  function(value, interval){ return(value - value %% interval) }
 
-year_interval <- 3 # we can change and explore
+year_interval <- 5 # we can change and explore
 interval <- floor_to_interval(as.numeric(year), year_interval)
-target_feature <- "theory" # we can change this
+target_feature <- "mechanism" # we can change this
 
 time_specific_token <- 
   paste0(target_feature, "_", interval, "_", interval + year_interval, "")
@@ -127,7 +128,7 @@ similar_words <-
 map(time_specific_token, 
     ~find_similar_words_safe(.x, 
                         embedding_matrix, 
-                        n = 50)) %>% # explore to change the context word quantity 
+                        n = 40)) %>% # explore to change the context word quantity 
   transpose() %>%
   simplify_all() %>% 
   .$result %>% 
@@ -166,7 +167,7 @@ tsne_plot <-
             aes(x = V1, 
                 y = V2, 
                 label = word), 
-            size = 2) +
+            size = 3) +
   geom_segment(data = tsne_plot_target_features, 
                aes(x = V1, 
                    y = V2,
@@ -192,7 +193,4 @@ tsne_plot +
                  year_interval, 
                  " year groupings ")) +
   labs(caption  = "Data and code online at https://github.com/benmarwick/saa-meeting-abstracts")
-
-
-
 
