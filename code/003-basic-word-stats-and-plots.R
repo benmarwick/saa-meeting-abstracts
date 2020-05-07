@@ -54,7 +54,12 @@ plot_all_words <-
 # Our key words over time
   
 keywords <- 
-  c("experience", "process", "community", "dynamics", "context", "compare")
+  c("identity", 
+    "power", 
+    "awareness", 
+    "transformation", 
+    "presentation", 
+    "cognition")
 
 dfm_keywords <- 
   dfm_select(all_txts_c_dtm, 
