@@ -1,6 +1,7 @@
 ---
-title: "The Geometry of Archaeological Thought: ..."
+title: "The Geometry of Archaeological Thought: Analysing discplinary change using word embeddings from conference abstracts"
 output: bookdown::html_document2
+bibliography: bibliography.bib
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
@@ -10,6 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 # Introduction
+
+The study of disciplinary change traditionally relies on close reading of a large number of publications, manually sorting them into pre-defined categories and making connections between these groups and external influences [e.g. @trigger1989history]. These methods are time-consuming and expensive, which excludes many people from participating. They are also vulnerable to biases     
+
+computational approaches that could scan the entire corpus to generate topics in a bottom-up fashion, based on the semantic content of the publications themselves. These approaches indeed make it possible to analyze more comprehensively and more systematically the contents of large corpora of full-text documents, be it in history and sociology 
+
+
+
 
 # Background
 

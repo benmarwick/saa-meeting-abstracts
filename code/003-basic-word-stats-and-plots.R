@@ -14,6 +14,16 @@ abstract_txt_files <-
 all_txts <- tolower(readtext::readtext(abstract_txt_files))
 names(all_txts) <- map_chr(names(all_txts), ~str_match_all(.x, "\\d{4}")[[1]][1,1])
 
+# word count checking
+all_txts_word_count_per_year <- 
+map_int(all_txts, 
+       stringi::stri_count_words) %>% 
+  stack %>% 
+  as_tibble() %>% 
+  rename(words = values,
+         year = ind) %>% 
+  mutate(year = as.numeric(as.character(year)))
+
 # count all words for each year
 all_txts_c <- corpus(all_txts)
 all_txts_c_summary <- 
@@ -26,6 +36,7 @@ all_txts_c_dtm <-
       remove_punct = TRUE)
 
 # plot of all words in each year
+plot_all_words <- 
   ggplot(data = all_txts_c_summary, 
          aes(x = year , 
              y = Tokens / 1000, 
@@ -34,9 +45,9 @@ all_txts_c_dtm <-
   scale_x_continuous(labels = c(seq(1940, 2020, 2)), 
                      breaks = seq(1940, 2020, 2),
                      name = "Year") +
-  scale_y_continuous(name = "Total word count (x 1,000)",
+  scale_y_continuous(name = "Total word count per year (x 1,000)",
                      labels = scales::comma) +
-  theme_bw() +
+  theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, 
                                    vjust = 0.5)) 
   
@@ -119,6 +130,7 @@ number_of_abstracts_per_year_all_years <-
   bind_rows(number_of_abstracts_per_year)
 
 # plot abstracts for all years
+plot_all_abstracts <- 
 ggplot(number_of_abstracts_per_year_all_years,
        aes(year, 
            number_of_abstracts)) +
@@ -131,6 +143,9 @@ ggplot(number_of_abstracts_per_year_all_years,
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, 
                                    vjust = 0.5)) 
+
+library(patchwork)
+plot_all_words / plot_all_abstracts
 
 
 
