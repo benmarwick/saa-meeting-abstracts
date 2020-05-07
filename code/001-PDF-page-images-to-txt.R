@@ -11,7 +11,7 @@ abstracts_tally <- readxl::read_excel(here::here("data/raw-data/saa-abstracts-ta
 abstracts_that_are_page_images <- 
 abstracts_tally %>% 
   filter(image_or_text == "image") %>% 
-  filter( year %in% 1985) # checking just one year that seems odd, remove this line to do all years
+  filter( year %in% 1982) # checking just one year that seems odd, remove this line to do all years
 
 # OCR abstracts that are images
 
@@ -45,7 +45,7 @@ library(magick)
 abstracts_that_are_page_images_two_page_spread <- 
   abstracts_that_are_page_images %>% 
   filter(single_or_double_page_spread == "double") %>% 
-  filter( year %in% 1985) # checking just one year that seems odd, remove this line to do all years
+  filter( year %in% 1982) # checking just one year that seems odd, remove this line to do all years
 
 abstracts_that_are_page_images_two_page_spread_paths <- 
   paste0(here::here("data/derived-data/abstracts-ocr/"), 

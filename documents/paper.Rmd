@@ -12,14 +12,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-The study of disciplinary change traditionally relies on close reading of a large number of publications, manually sorting them into pre-defined categories and making connections between these groups and external influences [e.g. @trigger1989history]. These methods are time-consuming and expensive, which excludes many people from participating. They are also vulnerable to biases     
+The study of disciplinary change traditionally relies on close reading of a large number of publications, manually sorting them into pre-defined categories and making connections between these groups and external influences [e.g. @trigger1989history]. These methods are time-consuming and expensive (because they depend on full access to a large library of texts), which limits participation in this aspect of archaeology. Computational approaches to analyzing text that can process many publications quickly to generate topics in a bottom-up fashion offer a new way to investigate disciplinary history. This has the advantage of increasing and diversifying participation in study of the history of archaeology, as well as  more comprehensive, systematic, and reproducible analyses of the contents of large number of full-text documents. The methods and data we present here offer empirical basis for what might otherwise be informal claims about the discipline and its history. They are also the type of data that may prompt discussion about the directions the discipline might — or could — take.
 
-computational approaches that could scan the entire corpus to generate topics in a bottom-up fashion, based on the semantic content of the publications themselves. These approaches indeed make it possible to analyze more comprehensively and more systematically the contents of large corpora of full-text documents, be it in history and sociology 
-
-
-
+In this paper we present a dataset of all available abstracts of papers and posters presented at annual meetings of the Society of American Archaeology. We demonstrate the use of word embeddings, a commonly used computational tool in natural language processing (NLP) and machine learning, as a method to measure, quantify, and compare changes in the way archaeologists write. We present the temporal reference plot as a method for visualizing disciplinary change in archaeology. As a case study, we use these data and methods to explore how archaeologists' writing about explaining and theorizing the past have changed over time.
 
 # Background
+
+Research into the history of archaeology is often organised into two major phases. An early internalist phase, where the story of development of the field is told with limited reference to the influence of political, social, religious, and economic institutions. In the 1980s an external, critical history phase began, seeking to understand the interactions between archaeological practice and its political, economic and social contexts.
+
+Among historians of archaeology there are two major phases in  ‘critical history of archaeology’ in the 1980s had been characterized by the replacement of an 
 
 - previous efforts at the history of archaeology (e.g. Bruce Trigger's book)
 - previous efforts at text analysis in archaeology (e.g. bibliometrics, citation networks)
