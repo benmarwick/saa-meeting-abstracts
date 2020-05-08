@@ -1,7 +1,7 @@
 ---
 title: "The Geometry of Archaeological Thought: Analysing discplinary change using word embeddings from conference abstracts"
 output: bookdown::html_document2
-bibliography: bibliography.bib
+bibliography: references.bib
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The study of disciplinary change traditionally relies on close reading of a large number of publications, manually sorting them into pre-defined categories and making connections between these groups and external influences [e.g. @trigger1989history]. These methods are time-consuming and expensive (because they depend on full access to a large library of texts), which limits participation in this aspect of archaeology. Computational approaches to analyzing text that can process many publications quickly to generate topics in a bottom-up fashion offer a new way to investigate disciplinary history. This has the advantage of increasing and diversifying participation in study of the history of archaeology, as well as  more comprehensive, systematic, and reproducible analyses of the contents of large number of full-text documents. The methods and data we present here offer empirical basis for what might otherwise be informal claims about the discipline and its history. They are also the type of data that may prompt discussion about the directions the discipline might — or could — take.
 
-In this paper we present a dataset of all available abstracts of papers and posters presented at annual meetings of the Society of American Archaeology. We demonstrate the use of word embeddings, a commonly used computational tool in natural language processing (NLP) and machine learning, as a method to measure, quantify, and compare changes in the way archaeologists write. We present the temporal reference plot as a method for visualizing disciplinary change in archaeology. As a case study, we use these data and methods to explore how archaeologists' writing about explaining and theorizing the past have changed over time.
+In this paper we present a dataset of all available abstracts of papers and posters presented at annual meetings of the Society of American Archaeology. We demonstrate the use of word embeddings, a commonly used computational tool in natural language processing (NLP) and machine learning, as a method to measure, quantify, and compare changes in the way archaeologists write cf. [@Garg2018; @Kozlowski2019]. We present the temporal reference plot as a method for visualizing disciplinary change in archaeology. As a case study, we use these data and methods to explore how archaeologists' writing about explaining and theorizing the past have changed over time.
 
 # Background
 
@@ -28,15 +28,22 @@ Among historians of archaeology there are two major phases in  ‘critical histo
 # Methods
 
 - source of the data
-We collected abstracts from Society of American Archaeology (SAA) annual meeting programs from 1964 to 2020. The total number of abstracts are 68,176 from 40 annual meetings excluding some years without available abstracts. The source of abstract includes papers, posters, workshop posters, symposium represented by paragraphs. The annual programs are available online at https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. The original format of abstracts on websites includes non-searchable PDF documents coming from images for early years and searchable PDF documents after 2005.
 
-- preparation steps: data cleaning (Cite the quanteda pkg, and things they cite)
-For image-based pdfs, we convert them into PNG files, clean up the images using Magick package, and then extract the text using Tesseract package [@Kay2007] for optical character recognition (OCR). We obtain 95-98 percent accuracy of OCR on a word level across years according to the results of error rate for each year. After the text are ready, we use quanteda package for text managing and analyzing [@Benoit2018]. We clean up the text by removing all punctuation and stop words, such as "the", "an", "a", that might have some impacts on our results.
+The data for our study comes from the text of oral and poster presentation abstracts presented at the annual meetings of the Society of American Archaeology (SAA). The earliest meeting in our data is 19XX, and we have some years missing, especially XXXX-XXXX. The total number of abstracts is 68,176 (xxx words) from 40 annual meetings. We obtained PDF files of annual programs from https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. 
+
+The PDFs for the years XXXX-XXXX contain images of pages, and after 2005 the PDFs are searchable text. We converted the page images from PDF to PNG files using ImageMagick software, and then used optical character recognition to extract text from the PNG files with the Tesseract package [@Kay2007]. We obtained an acceptable rate of 95-98% word-level OCR accuracy across the PDFs [citation]. After OCR, we used the quanteda package  [@Benoit2018] to remove punctuation, numbers, and stopwords, such as "the", "an", "a", [specifically why do we remove stopwords?]. 
+
+- something about basic steps
+-- transform text into dfm, define dfm... 
 
 - word embeddings (cite our readings)
-Word embeddings is useful tool based machine learning framework for measurement, quantifying, and comparing the semantic relations between words, which enables a wide range of application for temporal changes in word relationships related to the sociocultural interests [@Garg2018; @Kozlowski2019]. There are two major word-level pretrained word embeddings, Word2Vec and Glove according to different methods used for training [@Rong2014; @Pennington2014]. Since pretrained word embeddings are trained on large corpus such as Google News, they can capture the semantic meaning of a word very well. 
+-- a few sentences to introduce the reader to how WE have been used in other recent studies. this is a little bit background. '...recently used in many social science fields to...' tell the reader what was the finding of some key studies using WE that have inspired us. 
 
-In this article, we use text2vec package [@Selivanov2016] to train the word embeddings using GloVe model, which calculates the occurrence of a pair of words and creates the co-occurrence matrix. 
+<!-- There are two major word-level pretrained word embeddings, Word2Vec and Glove according to different methods used for training [@Rong2014; @Pennington2014]. --> 
+
+-- then some more detail about the mechanics of the method, as we are using it. Say how what we did works in general. 
+
+In this article, we trained word embeddings with the GloVe model using th text2vec package [@Selivanov2016]. The GloVe model calculates ... creates the co-occurrence matrix. 
 
 - temporal referencing plots (cite our readings)
 
