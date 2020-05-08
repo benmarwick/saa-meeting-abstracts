@@ -12,7 +12,6 @@ fs::dir_ls(here::here("data/derived-data/"),
 all_txts <- tolower(readtext::readtext(abstract_txt_files))
 names(all_txts) <- map_chr(names(all_txts), ~str_match_all(.x, "\\d{4}")[[1]][1,1])
 
-
 all_txts_c <- corpus(all_txts)
 
 # make a dfm, removing stopwords and maybe applying stemming
@@ -41,7 +40,7 @@ floor_to_interval <-  function(value, interval){ return(value - value %% interva
 
 year_interval <- 5 # we can change and explore
 interval <- floor_to_interval(as.numeric(year), year_interval)
-target_feature <- "mechanism" # we can change this
+target_feature <- "mechanisms" # we can change this
 
 time_specific_token <- 
   paste0(target_feature, "_", interval, "_", interval + year_interval, "")
@@ -136,11 +135,16 @@ map(time_specific_token,
   names() %>% 
   unique()
 
+# keep only the tokens found in an English dictionary
+myTokens <- 
+  featnames(dfm(tokens_select(tokens(similar_words), 
+                              names(data_int_syllables))))
+
 library(Rtsne)
 library(ggplot2)
 library(ggrepel)
 
-plot_data <- embedding_matrix[row.names(embedding_matrix) %in% c(similar_words, 
+plot_data <- embedding_matrix[row.names(embedding_matrix) %in% c(myTokens, 
                                                                  time_specific_token), ] 
 tsne <- Rtsne(plot_data, 
               perplexity = 30, # explore different values
@@ -149,7 +153,8 @@ tsne <- Rtsne(plot_data,
 tsne_plot_data <- 
   tsne$Y %>%
   as.data.frame() %>%
-  mutate(word = row.names(plot_data))
+  mutate(word = row.names(plot_data)) %>% 
+  filter(!word %in% time_specific_token)
 
 tsne_plot_target_features <- 
   tsne$Y %>%
