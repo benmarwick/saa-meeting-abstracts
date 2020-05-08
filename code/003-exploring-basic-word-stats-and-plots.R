@@ -29,7 +29,7 @@ all_txts_c_dtm <-
 
 #----- change these words
 keywords <-
-  c('agency',
+  c("agency",
     "phenomena",
     "action",
     "affect",
@@ -61,7 +61,7 @@ ggplot(data = dfm_keywords_tbl_prop,
            y = prop)) +
   geom_col() +
   facet_wrap( ~ keyword, 
-              ncol = 1,
+              ncol = 1, 
              scales = "free_y") +
   scale_x_continuous(labels = c(seq(1960, 2020, 2)), 
                      breaks = seq(1960, 2020, 2),
