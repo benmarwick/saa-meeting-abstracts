@@ -36,7 +36,7 @@ year_num <- length(which(!is.na(saa_data$number_of_abstracts)))
 ```
 
 
-The data for our study comes from the text of oral and poster presentation abstracts presented at the annual meetings of the Society of American Archaeology (SAA). The earliest meeting in our data is 1962, and we have some years missing, especially 1995-2003. The total number of abstracts is `r abstract_num` (xxx words) from `r year_num` annual meetings. We obtained PDF files of annual programs from https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. 
+The data for our study comes from the text of oral and poster presentation abstracts presented at the annual meetings of the Society of American Archaeology (SAA). The earliest meeting in our data is 1962, and we have some years missing, especially 1995-2003 where PDF files were not available to us. The total number of abstracts is `r prettyNum(abstract_num, big.mark = ",")` (xxx words) from `r year_num` annual meetings. We obtained PDF files of annual programs from https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. 
 
 The PDFs for the years 1962-1994 contain images of pages, and after 2005 the PDFs are searchable text. We converted the page images from PDF to PNG files using ImageMagick software, and then used optical character recognition to extract text from the PNG files with the Tesseract package [@Kay2007]. We obtained an acceptable rate of 95-98% word-level OCR accuracy across the PDFs [@Holley2009]. After OCR, we used the quanteda package  [@Benoit2018] to remove punctuation, numbers, and stopwords, such as "the", "an", "a", with little or no semantic meanings. 
 
