@@ -9,6 +9,7 @@ dont_care <-
     'some', 'from', 'been', 'discuss', 'while',
     'over')
 
+# from tidytext
 df_tbl <- 
   convert(df, to = "data.frame") %>% 
   pivot_longer(-document, 
@@ -18,12 +19,19 @@ df_tbl <-
   filter(word %in% names(data_int_syllables)) %>% 
   filter(str_length(word) > 3) %>% 
   filter(!word %in% dont_care)
+
+df_tbl_yearly_totals <- 
+  df_tbl %>% 
+  group_by(year) %>% 
+  summarise(total_words = sum(n, na.rm = TRUE))
+  
   
 # compute proportion of all words per year
 df_tbl_prop <- 
   df_tbl %>% 
-  left_join(all_txts_c_summary) %>% 
-  mutate(prop = n / Tokens ) %>% 
+ # left_join(all_txts_c_summary) %>% 
+  left_join(df_tbl_yearly_totals) %>% 
+  mutate(prop = n / total_words ) %>% 
   filter(prop > 0) %>% 
   group_by(word) %>% 
   mutate(sum_the_word = sum(n)) %>% 
@@ -34,7 +42,9 @@ df_tbl_prop <-
 
 df_tbl_prop_two_groups <- 
   df_tbl_prop %>% 
-  mutate(year_group = ifelse(document < 2004, "early", "late"))
+  mutate(year_group = ifelse(document < 2004, 
+                             "early", 
+                             "late"))
 
 df_tbl_prop_two_groups_diff <- 
 df_tbl_prop_two_groups %>% 

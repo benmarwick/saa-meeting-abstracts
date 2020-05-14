@@ -12,42 +12,47 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-The study of disciplinary change traditionally relies on close reading of a large number of publications, manually sorting them into pre-defined categories and making connections between these groups and external influences [e.g. @trigger1989history]. These methods are time-consuming and expensive (because they depend on full access to a large library of texts), which limits participation in this aspect of archaeology. Computational approaches to analyzing text that can process many publications quickly to generate topics in a bottom-up fashion offer a new way to investigate disciplinary history. This has the advantage of increasing and diversifying participation in study of the history of archaeology, as well as  more comprehensive, systematic, and reproducible analyses of the contents of large number of full-text documents. The methods and data we present here offer empirical basis for what might otherwise be informal claims about the discipline and its history. They are also the type of data that may prompt discussion about the directions the discipline might — or could — take.
+BM: The study of disciplinary change traditionally relies on close reading of a large number of publications, manually sorting them into pre-defined categories and making connections between these groups and external influences [e.g. @trigger1989history]. These methods are time-consuming and expensive (because they depend on full access to a large library of texts), which limits participation in this aspect of archaeology. Computational approaches to analyzing text that can process many publications quickly to generate topics in a bottom-up fashion offer a new way to investigate disciplinary history. This has the advantage of increasing and diversifying participation in study of the history of archaeology, as well as  more comprehensive, systematic, and reproducible analyses of the contents of large number of full-text documents. The methods and data we present here offer empirical basis for what might otherwise be informal claims about the discipline and its history. They are also the type of data that may prompt discussion about the directions the discipline might — or could — take.
 
-In this paper we present a dataset of all available abstracts of papers and posters presented at annual meetings of the Society of American Archaeology. We demonstrate the use of word embeddings, a commonly used computational tool in natural language processing (NLP) and machine learning, as a method to measure, quantify, and compare changes in the way archaeologists write cf. [@Garg2018; @Kozlowski2019]. We present the temporal reference plot as a method for visualizing disciplinary change in archaeology. As a case study, we use these data and methods to explore how archaeologists' writing about explaining and theorizing the past have changed over time.
+BM: In this paper we present a dataset of all available abstracts of papers and posters presented at annual meetings of the Society of American Archaeology. We demonstrate the use of word embeddings, a commonly used computational tool in natural language processing (NLP) and machine learning, as a method to measure, quantify, and compare changes in the way archaeologists write cf. [@Garg2018; @Kozlowski2019]. We present the temporal reference plot as a method for visualizing disciplinary change in archaeology. As a case study, we use these data and methods to explore how archaeologists' writing about explaining and theorizing the past have changed over time.
 
 # Background
 
-Research into the history of archaeology is often organised into two major phases. An early internalist phase, where the story of development of the field is told with limited reference to the influence of political, social, religious, and economic institutions. In the 1980s an external, critical history phase began, seeking to understand the interactions between archaeological practice and its political, economic and social contexts.
+BM: Research into the history of archaeology is often organised into two major phases. An early internalist phase, where the story of development of the field is told with limited reference to the influence of political, social, religious, and economic institutions. In the 1980s an external, critical history phase began, seeking to understand the interactions between archaeological practice and its political, economic and social contexts.
 
-Among historians of archaeology there are two major phases in  ‘critical history of archaeology’ in the 1980s had been characterized by the replacement of an 
+BM: Among historians of archaeology there are two major phases in  ‘critical history of archaeology’ in the 1980s had been characterized by the replacement of an 
 
 - previous efforts at the history of archaeology (e.g. Bruce Trigger's book)
 - previous efforts at text analysis in archaeology (e.g. bibliometrics, citation networks)
+- new phase: we are now in the third phase  - computational text analysis
+- one promising new method is WE... successful applications of WE in other fields... 
+
+- background to Word embeddings
+
+For example, @Garg2018 explored how stereotypes and attitudes toward women and ethnic minorities changed through 20th and 21st centuries in the US. <!-- how?-->  They found both gender and ethnic occupation biases significantly correlated with the actual occupation participation rates. Those changes by negative words in the descriptions of genders and ethnic groups over time are associated with the women’s movement in the 1960s–1970s and Asian-American population growth in the 1960s and 1980s. 
+
+@Kozlowski analyzed the cultural dimensions of social class and how they evolved over the twentieth century in the US. <!-- how?--> They found the relationships between the cultural dimensions of class remain stable over the century, but the individual words, such as employment, status, education, cultivation, on those dimensions shift over the decades. <!-- for example ?--> They also found affluence and status serve as cultural mediators between two clusters <!-- of what? -->, education, cultivation, and morality on one side, and employment and ownership on the other side. <!-- I fear this is too abstract for our reader to grasp -->
 
 # Methods
-
-- source of the data
 
 ```{r read-data}
 saa_data <- readxl::read_excel(here::here("data", "raw-data", "saa-abstracts-tally.xlsx"))
 abstract_num <- sum(saa_data$number_of_abstracts, na.rm = TRUE)
-year_num <- length(which(!is.na(saa_data$number_of_abstracts)))
+year_num <- length(which(!is.na(saa_data$number_of_abstracts))) # 41 years vs 40
 ```
 
+LW: The data for our study comes from the text of abstracts of oral and poster presentations at the annual meetings of the Society of American Archaeology (SAA). The earliest meeting in our data is 1962, and we have some years missing, especially 1995-2003 where PDF files were not available to us. The total number of abstracts is `r prettyNum(abstract_num, big.mark = ",")` (xxx words) from `r year_num` annual meetings. We obtained PDF files of annual programs from https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. 
 
-The data for our study comes from the text of oral and poster presentation abstracts presented at the annual meetings of the Society of American Archaeology (SAA). The earliest meeting in our data is 1962, and we have some years missing, especially 1995-2003 where PDF files were not available to us. The total number of abstracts is `r prettyNum(abstract_num, big.mark = ",")` (xxx words) from `r year_num` annual meetings. We obtained PDF files of annual programs from https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. 
+LW: The PDFs for the years 1962-1994 contain images of pages, and after 2005 the PDFs are searchable text. We converted the page images from PDF to PNG files using ImageMagick software, and then used optical character recognition to extract text from the PNG files with the Tesseract package [@Kay2007]. We obtained an acceptable rate of 95-98% word-level OCR accuracy across the PDFs [@Holley2009]. After OCR, we removed punctuation, numbers, and stopwords, such as "the", "an", "a", due to their little or no semantic value for our research question, with the quanteda package [@Benoit2018]. 
 
-The PDFs for the years 1962-1994 contain images of pages, and after 2005 the PDFs are searchable text. We converted the page images from PDF to PNG files using ImageMagick software, and then used optical character recognition to extract text from the PNG files with the Tesseract package [@Kay2007]. We obtained an acceptable rate of 95-98% word-level OCR accuracy across the PDFs [@Holley2009]. After OCR, we used the quanteda package  [@Benoit2018] to remove punctuation, numbers, and stopwords, such as "the", "an", "a", due to their little or no semantic meanings. 
+LW: We transformed the cleaned text into a document-feature matrix. This is a rectangular, tabular data structure where one row represents one PDF, and one column represents one word, also known as a feature. The cell values in this matrix are the frequencies of each feature for each PDF. We selected the features that occur at least three times across all PDFs for construction of a feature co-occurrence matrix. To create this matrix we calculated how often each feature appears with another. This method involves setting an area defined by window in which we can detect the context terms with the target term in the middle position.  <!-- clarify and describe more fcm and window --> 
 
-- Basic steps for matrix construction
-
-We transform text into a document-feature matrix (dfm), where rows represent PDFs and columns represent features, the terms extracted from PDFs, and values are frequencies of certain features for each PDFs. We selected the features that occur at least three times for later construction of a word co-occurrence matrix. In this article, we trained word embeddings with the GloVe model using th text2vec package [@Selivanov2016]. The GloVe model calculates how often one word appear with the presence of another word to construct a co-occurrence matrix. This method involves setting an area defined by window in which we can detect the context terms with the target term in the middle position. 
+We trained word embeddings with the GloVe model using the text2vec package [@Selivanov2016]. 
 
 <!-- There are two major word-level pretrained word embeddings, Word2Vec and Glove according to different methods used for training [@Rong2014; @Pennington2014]. --> 
 
-- temporal referencing plots (cite our readings)
-The word embeddings method is applied to explore temporal changes of vectors to present a historical trend. For example, @Garg2018 explore the historical trends in stereotypes and attitudes toward women and ethnic minorities in the 20th and 21st centuries in the US. They found both gender and ethnic occupation biases significantly correlated with the actual occupation participation rates. Those changes by negative words in the descriptions of genders and ethnic groups over time are associated with the women’s movement in the 1960s–1970s and Asian-American population growth in the 1960s and 1980s. Another study , @Kozlowski analyze the cultural dimensions of social class and how they evolve over the twentieth century in the US. They found the relationships between the cultural dimensions of class remain stable semantic structure over the century, but the individual words, such as employment, status, education, cultivation, on those dimensions shift over the decades. They also found affluence and status serve as cultural mediators between two clusters, education, cultivation, and morality on one side, and employment and ownership on the other side.
+LW: We investigated a historical trends in word meanings by visualizing the word embeddings generated by the GloVe method. ...
+
 
 
 ```{r temporal referencing plots}
