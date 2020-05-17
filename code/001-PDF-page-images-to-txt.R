@@ -100,8 +100,51 @@ for(i in seq_len(length(abstracts_that_are_page_images_two_page_spread_paths))){
 }
 
 
+# Do OCR on PNG of single pages
 
+abstracts_that_are_page_images_single <- 
+  abstracts_tally %>% 
+  filter(single_or_double_page_spread == "single")
 
+# OCR abstracts that are images of single pages
+  
+# select PDF document to work on 
+year_single <- abstracts_that_are_page_images_single$year
+page_start_single <- abstracts_that_are_page_images_single$abstract_start_page
+page_end_single <- abstracts_that_are_page_images_single$abstract_end_page
+  
+# create directory to hold results
+wd <- getwd()
+dir_create(paste0(here::here("data/derived-data/abstracts-ocr/"), year_single, "/pngs"))
+setwd(paste0(here::here("data/derived-data/abstracts-ocr/"), year_single, "/pngs"))
+  
+# convert PDF to PNG
+pdf_convert_files_single <- 
+  pdf_file_names %>% 
+  str_subset(as.character(year_single)) %>% 
+  pdftools::pdf_convert(pages = page_start_single:page_end_single, 
+                          dpi = 600,
+  )
+  
+setwd(wd)
+
+# Do OCR on PNG of single pages
+
+pngs_single_path <- paste0("data/derived-data/abstracts-ocr/", year_single, "/pngs")
+png_single_files <- list.files(pngs_single_path, full.names = TRUE)
+
+text <- vector("list", length = length(png_single_files))
+for(i in seq_len(length(png_single_files))){
+  text [[i]] <- tesseract::ocr(png_single_files[i]) 
+}
+
+text_c <- paste0(text, collapse = ", ") # combine into a single element
+dir_create(paste0("data/derived-data/abstracts-ocr/", year_single, "/txt_from_split_pages"))
+write_lines(text_c, 
+            paste0("data/derived-data/abstracts-ocr/", year_single, 
+                   "/txt_from_split_pages/abstract-text-", 
+                   year_single, 
+                   ".txt"))
 
 
 # convert PDF to text
