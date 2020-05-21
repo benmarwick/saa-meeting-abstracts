@@ -24,9 +24,12 @@ all_txts_c_dtm <-
 # investigate the target feature a bit
 
 # we can change these
-related_words <- c("mechanism", "mechanisms")
+related_words <- c("theory", "theories", "theoretical")
 map(related_words, ~colSums(all_txts_c_dtm[, .x ]))
 #  so use the most common one
+
+# mechanisms
+# theory
 
 
 # https://www.aclweb.org/anthology/P19-1044.pdf is our inspiration 
@@ -93,9 +96,9 @@ all_txts_c_fcm <- fcm(all_txts_c_dtm_toks2,
 
 library("text2vec")
 
-glove <- GlobalVectors$new(rank = 50, x_max = 10)
+glove <- GlobalVectors$new(rank = 50, x_max = 20)
 all_txts_main <- glove$fit_transform(all_txts_c_fcm, 
-                               n_iter = 10,
+                               n_iter = 20,
                                convergence_tol = -1, 
                                n_threads = 8)
 
@@ -135,7 +138,7 @@ map(time_specific_token,
   names() %>% 
   unique()
 
-# keep only the tokens found in an English dictionary
+# keep only the tokens found in an English syllables dictionary
 myTokens <- 
   featnames(dfm(tokens_select(tokens(similar_words), 
                               names(data_int_syllables))))
@@ -172,7 +175,7 @@ tsne_plot <-
             aes(x = V1, 
                 y = V2, 
                 label = word), 
-            size = 3) +
+            size = 2) +
   geom_segment(data = tsne_plot_target_features, 
                aes(x = V1, 
                    y = V2,
@@ -185,7 +188,7 @@ tsne_plot <-
             aes(x = V1, 
                 y = V2,
                 label = word),
-            size = 3,
+            size = 2,
             colour = "red",
             bg.color = "white", 
             bg.r = 0.15 ) +
@@ -199,3 +202,5 @@ tsne_plot +
                  " year groupings ")) +
   labs(caption  = "Data and code online at https://github.com/benmarwick/saa-meeting-abstracts")
 
+ggsave(here::here(str_glue("figures/tr-plot-target-word-is-{target_feature}-{year_interval}-by-year-intervals.png")))
+  
