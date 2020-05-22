@@ -40,7 +40,7 @@ map(related_words, ~colSums(read_in_the_abstracts_data$all_txts_c_dtm[, .x ]))
 
 # set the word here that we use in the later functions:
 target_feature <-  "theory"
-year_interval <-  5
+year_interval <-  7
 
 insert_generate_plot_fn <- 
   function(target_feature, 
@@ -67,7 +67,7 @@ generate_embedding_matrix_data <-
   generate_embedding_matrix_fn(insert_time_specific_token_data$all_txts_c_fcm,
                                insert_time_specific_token_data$time_specific_token,
                                n_similar_words = 100,
-                               rank = 75)
+                               rank = 30)
 #-----------------------------------------------------------
 
 # Now we can draw the plot:
@@ -88,7 +88,7 @@ temporal_referencing_plot_output <-
 
 ggsave(here::here(str_glue("figures/tr-plot-target-word-is-{target_feature}-{year_interval}-by-year-intervals.png")))
 
-  }
+}
 
 
 # Analyze and plot many target features in one action: 
@@ -107,10 +107,12 @@ target_words <-
 ,"agency"
 ,"practice"
 ,"phenomenon"
+,"evidence"
+,"data"
   )
 
 
 map(target_words, 
     ~insert_generate_plot_fn(.x, 
-                             year_interval= 10, 
+                             year_interval = 7, 
                              read_in_the_abstracts_data))

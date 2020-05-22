@@ -53,6 +53,10 @@ interval <- floor_to_interval(as.numeric(year), year_interval)
 time_specific_token <- 
   paste0(target_feature, "_", interval, "_", interval + year_interval, "")
 
+# deal with the most recent one
+time_specific_token[length(time_specific_token)] <- 
+  str_replace(time_specific_token[length(time_specific_token)], "_\\d{4}$", "")
+
 all_txts_updated <- vector("character", length = length(all_txts))
 for(i in seq_len(length(all_txts))){
   
@@ -223,7 +227,10 @@ tsne_plot <-
             colour = "red",
             bg.color = "white", 
             bg.r = 0.15 ) +
-  theme_minimal()
+  theme_minimal() +
+  xlab("t-SNE dimension 1") +
+  ylab("t-SNE dimension 2") 
+  
 
 tsne_plot +
   ggtitle(paste0("Semantic shifts in the word '",
