@@ -108,11 +108,12 @@ return(list(all_txts_c_fcm = all_txts_c_fcm,
  
 generate_embedding_matrix_fn <- function(all_txts_c_fcm = all_txts_c_fcm,
                                          time_specific_token = time_specific_token,
-                                         n_similar_words = 50){
+                                         n_similar_words = 50,
+                                         rank = 100){
 
 library("text2vec")
 
-glove <- GlobalVectors$new(rank = 50, x_max = 20)
+glove <- GlobalVectors$new(rank = rank, x_max = 20)
 all_txts_main <- glove$fit_transform(all_txts_c_fcm, 
                                n_iter = 20,
                                convergence_tol = -1, 

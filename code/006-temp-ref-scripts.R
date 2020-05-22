@@ -9,12 +9,18 @@ read_in_the_abstracts_data <-
 # save it so we don't have to repeat this each time
 saveRDS(read_in_the_abstracts_data, 
         here::here("data/derived-data/read_in_the_abstracts_data.rds"))
+
+# read it in to save time
+read_in_the_abstracts_data <- 
+  readRDS(here::here("data/derived-data/read_in_the_abstracts_data.rds"))
 #-----------------------------------------------------------
 
 # investigate the target feature a bit
 
 # we can explore these
-related_words <- c("theory", "theories", "theoretical")
+library(tidyverse)
+library(quanteda)
+related_words <- c("phenomena", "phenomenon")
 map(related_words, ~colSums(read_in_the_abstracts_data$all_txts_c_dtm[, .x ]))
 #  so use the most common one, eg.:
 
@@ -30,6 +36,7 @@ map(related_words, ~colSums(read_in_the_abstracts_data$all_txts_c_dtm[, .x ]))
 # understanding
 # agency
 # practice
+# phenomenon
 
 # set the word here that we use in the later functions:
 target_feature <-  "theory"
@@ -59,7 +66,8 @@ insert_time_specific_token_data <-
 generate_embedding_matrix_data <- 
   generate_embedding_matrix_fn(insert_time_specific_token_data$all_txts_c_fcm,
                                insert_time_specific_token_data$time_specific_token,
-                               n_similar_words = 50)
+                               n_similar_words = 100,
+                               rank = 75)
 #-----------------------------------------------------------
 
 # Now we can draw the plot:
@@ -98,8 +106,11 @@ target_words <-
 ,"understanding"
 ,"agency"
 ,"practice"
+,"phenomenon"
   )
 
 
 map(target_words, 
-    ~insert_generate_plot_fn(.x, 5, read_in_the_abstracts_data))
+    ~insert_generate_plot_fn(.x, 
+                             year_interval= 10, 
+                             read_in_the_abstracts_data))
