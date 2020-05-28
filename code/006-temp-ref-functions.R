@@ -35,7 +35,8 @@ return(list(all_txts = all_txts,
 
 insert_time_specific_token_fn <- function(all_txts = all_txts,
                                           target_feature = "mechanisms",
-                                          year_interval = 5){
+                                          year_interval = 5,
+                                          min_termfreq = 5){
 
 # https://www.aclweb.org/anthology/P19-1044.pdf is our inspiration 
 # in each text we want to replace the target feature (word) with a tagged feature,
@@ -53,9 +54,10 @@ interval <- floor_to_interval(as.numeric(year), year_interval)
 time_specific_token <- 
   paste0(target_feature, "_", interval, "_", interval + year_interval, "")
 
-# deal with the most recent one
+# deal with the most recent one by grouping it with the previous one
+# otherwise we get 2020 all by itself
 time_specific_token[length(time_specific_token)] <- 
-  str_replace(time_specific_token[length(time_specific_token)], "_\\d{4}$", "")
+  time_specific_token[(length(time_specific_token) - 1)]
 
 all_txts_updated <- vector("character", length = length(all_txts))
 for(i in seq_len(length(all_txts))){
@@ -80,7 +82,7 @@ all_txts_c_dtm_toks1 <- tokens(all_txts_updated_c,
                   remove_numbers = TRUE,
                   remove_url = FALSE,
                   remove_separators = TRUE,
-                  split_hyphens = FALSE)
+                  split_hyphens = FALSE) 
 
 all_txts_c_feats <- dfm(all_txts_c_dtm_toks1, 
                 tolower = TRUE,
@@ -88,7 +90,7 @@ all_txts_c_feats <- dfm(all_txts_c_dtm_toks1,
                # remove = c(stopwords("english")),
                # stem = TRUE, 
                 remove_punct = TRUE) %>%
-  dfm_trim(min_termfreq = 3) %>%
+  dfm_trim(min_termfreq = min_termfreq) %>% # try to limit the exotic words that are only found in earlier years
   featnames()
 
 # leave the pads so that non-adjacent words will not become adjacent
@@ -209,14 +211,14 @@ tsne_plot <-
             aes(x = V1, 
                 y = V2, 
                 label = word), 
-            size = 2,
-            check_overlap = TRUE) +
+            size = 1.5,
+            check_overlap = FALSE) +
   geom_segment(data = tsne_plot_target_features, 
                aes(x = V1, 
                    y = V2,
                    xend=c(tail(V1, n=-1), NA), 
                    yend=c(tail(V2, n=-1), NA)),
-               arrow=arrow(length=unit(0.3,"cm"), 
+               arrow=arrow(length=unit(0.2, "cm"), 
                            type = "closed"),
                colour = "red") +
   geom_text_repel(data = tsne_plot_target_features, 
@@ -228,6 +230,8 @@ tsne_plot <-
             bg.color = "white", 
             bg.r = 0.15 ) +
   theme_minimal() +
+  theme(axis.text=element_text(size=8),
+        axis.title=element_text(size=8)) +
   xlab("t-SNE dimension 1") +
   ylab("t-SNE dimension 2") 
   

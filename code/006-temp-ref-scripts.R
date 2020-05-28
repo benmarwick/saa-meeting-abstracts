@@ -38,14 +38,11 @@ map(related_words, ~colSums(read_in_the_abstracts_data$all_txts_c_dtm[, .x ]))
 # practice
 # phenomenon
 
-# set the word here that we use in the later functions:
-target_feature <-  "theory"
-year_interval <-  7
-
 insert_generate_plot_fn <- 
-  function(target_feature, 
-           year_interval, 
-           read_in_the_abstracts_data){
+  function(target_feature = "theory", 
+           year_interval = 5, 
+           read_in_the_abstracts_data,
+           min_termfreq = 15){
 
 # Now we insert the time-specific token, like "theory_1975_1980"
 
@@ -55,7 +52,8 @@ insert_generate_plot_fn <-
 insert_time_specific_token_data <- 
   insert_time_specific_token_fn(read_in_the_abstracts_data$all_txts,
                                 target_feature,
-                                year_interval)
+                                year_interval,
+                                min_termfreq)
 #-----------------------------------------------------------
 
 # Now we can generate the word embeddings for our target feature:
@@ -81,7 +79,7 @@ temporal_referencing_plot_output <-
                                time_specific_token = insert_time_specific_token_data$time_specific_token,
                                target_feature,
                                year_interval,
-                               perplexity = 50)
+                               perplexity = 100)
 #-----------------------------------------------------------
 
 # Now we can save the plot:
@@ -95,24 +93,26 @@ ggsave(here::here(str_glue("figures/tr-plot-target-word-is-{target_feature}-{yea
 
 target_words <- 
   c(
- "model"
-,"theory"
-,"mechanisms"
-,"hypothesis"
-,"explanations"
-,"inference"
-,"narrative"
-,"interpretation"
-,"understanding"
-,"agency"
-,"practice"
-,"phenomenon"
-,"evidence"
-,"data"
+ "theory"
+# ,"model"
+# ,"mechanisms"
+# ,"hypothesis"
+# ,"explanations"
+# ,"inference"
+# ,"narrative"
+# ,"interpretation"
+# ,"understanding"
+# ,"agency"
+# ,"practice"
+# ,"phenomenon"
+# ,"evidence"
+# ,"data"
   )
 
+library(tidyverse)
+library(quanteda)
 
 map(target_words, 
     ~insert_generate_plot_fn(.x, 
-                             year_interval = 7, 
+                             year_interval = 5, 
                              read_in_the_abstracts_data))
