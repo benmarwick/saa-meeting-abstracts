@@ -41,7 +41,9 @@ LW: Another example shows how word embeddings are effective for identifying sema
 
 ```{r read-data}
 saa_data <- readxl::read_excel(here::here("data", "raw-data", "saa-abstracts-tally.xlsx"))
+```
 
+```{r basic-stats}
 # basic stats
 library(tidyverse)
 abstract_num <- sum(saa_data$number_of_abstracts, na.rm = TRUE)
@@ -54,7 +56,11 @@ abstract_txt_files <-
              regexp = '\\.txt$')
 all_txts <- tolower(readtext::readtext(abstract_txt_files))
 
+# total word counts
 all_word_counts <- sum(stringi::stri_count_words(all_txts))
+
+# the hightst number of abstract
+high_abs <- max(saa_data$number_of_abstracts, na.rm = TRUE)
 ```
 
 LW: The data for our study comes from the text of abstracts of oral and poster presentations at the annual meetings of the Society of American Archaeology (SAA). The earliest meeting in our data is 1962, and we have some years missing, especially 1995-2003 where PDF files were not available to us. The total number of abstracts is `r prettyNum(abstract_num, big.mark = ",")` (`r prettyNum(all_word_counts, big.mark = ",")` words) from `r year_num` annual meetings. We obtained PDF files of annual programs from https://www.saa.org/annual-meeting/annual-meeting-archives/program-archives. 
@@ -88,8 +94,12 @@ We created a word list, including theory, inference, mechanism, explanation, hyp
 source(here::here("code/006-testing-word-2-vec-temporal-referencing-by-period.R"))
 ```
 
-
 - basic details (e.g. word and abstract counts)
+
+LW: Figure XX shows that there is an increase in the abstract counts over time that can be divided into two groups, a group of an early time from 1962 to 1994 with abstracts less than 1,000 per year, and a group of a later time from 2004 to 2020 with abstracts more than 1,500 per year. We observed the highest abstract counts (`r prettyNum(high_abs, big.mark = ",")`) in 2015, followed by 2017, 2019, 2018, and 2014 with more than 4,000 attracts, but a drop in 2020 with around 3,000 abstracts. The total number of word counts per year shows a similar pattern of growth over time that corresponds to the trend of the abstract counts. This suggests that the more abstract counts, the more word counts per year that matches our expectation for the data. 
+
+LW: We compared the word frequencies between two time periods, before 2004 and after 2004, to explore the general change of the usage of words in archaeology over time. We observed (Figure XX) an interesting pattern that shows a considerable high proportion of words used less often compared to words used more often after 2004, despite the word count is much higher in the later time. That is, archaeologists in more recent years have a smaller range of word choices and tend to not use some words, such as prehistoric, data, site, settlement, and patterns, used frequently in the past. In contrast, the words such as landscape, ancient, social, practices, and understanding become common after 2004. It could reflect an extinction of a large group of words during the course of the development of archaeology. One reason may be researchers have a more common idea about the selection of words when the community becomes bigger and more international. This leads to the use of a smaller group of words that present the sharing understanding about archaeology instead of the use of large group of obscure words demonstrate one's knowledge. 
+
 -- word frequency time series
 - TR plots
 
