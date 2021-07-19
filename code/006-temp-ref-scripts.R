@@ -79,7 +79,7 @@ temporal_referencing_plot_output <-
                                time_specific_token = insert_time_specific_token_data$time_specific_token,
                                target_feature,
                                year_interval,
-                               perplexity = 100)
+                               perplexity = 50)
 #-----------------------------------------------------------
 
 # Now we can save the plot:
@@ -93,6 +93,9 @@ ggsave(here::here(str_glue("figures/tr-plot-target-word-is-{target_feature}-{yea
 
 target_words <- 
   c(
+    "statement",
+    "framework",
+    "argument",
  "theory"
 # ,"model"
 # ,"mechanisms"
