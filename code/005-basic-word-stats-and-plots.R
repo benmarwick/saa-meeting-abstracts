@@ -9,14 +9,17 @@ dont_care <-
     'some', 'from', 'been', 'discuss', 'while',
     'over')
 
+
+
 # from tidytext
 df_tbl <- 
   convert(df, to = "data.frame") %>% 
-  pivot_longer(-document, 
+  mutate(year = parse_number(doc_id)) %>% 
+  select(-doc_id) %>% 
+  pivot_longer(-year, 
                names_to = "word",
                values_to = "n") %>% 
-  mutate(year = parse_number(document)) %>% 
-  filter(word %in% names(data_int_syllables)) %>% 
+  filter(word %in% names(nsyllable::data_syllables_en)) %>% 
   filter(str_length(word) > 3) %>% 
   filter(!word %in% dont_care)
 
@@ -41,7 +44,7 @@ df_tbl_prop <-
 
 df_tbl_prop_two_groups <- 
   df_tbl_prop %>% 
-  mutate(year_group = ifelse(document < 2004, 
+  mutate(year_group = ifelse(year < 2004, 
                              "early", 
                              "late"))
 

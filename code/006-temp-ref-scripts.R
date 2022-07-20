@@ -3,12 +3,12 @@
 #-----------------------------------------------------------
 # read in the abstracts text files
 # takes a long time!
-read_in_the_abstracts_data <- 
-  read_in_the_abstracts_fn()
+# read_in_the_abstracts_data <- 
+#  read_in_the_abstracts_fn()
 
 # save it so we don't have to repeat this each time
-saveRDS(read_in_the_abstracts_data, 
-        here::here("data/derived-data/read_in_the_abstracts_data.rds"))
+# saveRDS(read_in_the_abstracts_data, 
+#        here::here("data/derived-data/read_in_the_abstracts_data.rds"))
 
 # read it in to save time
 read_in_the_abstracts_data <- 
@@ -20,7 +20,7 @@ read_in_the_abstracts_data <-
 # we can explore these
 library(tidyverse)
 library(quanteda)
-related_words <- c("phenomena", "phenomenon")
+related_words <- c("method", "methods")
 map(related_words, ~colSums(read_in_the_abstracts_data$all_txts_c_dtm[, .x ]))
 #  so use the most common one, eg.:
 
@@ -39,7 +39,7 @@ map(related_words, ~colSums(read_in_the_abstracts_data$all_txts_c_dtm[, .x ]))
 # phenomenon
 
 insert_generate_plot_fn <- 
-  function(target_feature = "theory", 
+  function(target_feature = "method", 
            year_interval = 5, 
            read_in_the_abstracts_data,
            min_termfreq = 15){
@@ -84,7 +84,8 @@ temporal_referencing_plot_output <-
 
 # Now we can save the plot:
 
-ggsave(here::here(str_glue("figures/tr-plot-target-word-is-{target_feature}-{year_interval}-by-year-intervals.png")))
+ggsave(here::here(str_glue("figures/tr-plot-target-word-is-{target_feature}-{year_interval}-by-year-intervals.png")), 
+       bg = 'white')
 
 }
 
@@ -93,10 +94,11 @@ ggsave(here::here(str_glue("figures/tr-plot-target-word-is-{target_feature}-{yea
 
 target_words <- 
   c(
-    "statement",
-    "framework",
-    "argument",
- "theory"
+    "methods",
+    "method"
+# "ethics",
+# "argument",
+# "theory"
 # ,"model"
 # ,"mechanisms"
 # ,"hypothesis"

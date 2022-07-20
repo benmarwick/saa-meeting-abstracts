@@ -20,7 +20,7 @@ all_txts_c <- corpus(all_txts)
 
 # make a dfm, removing stopwords and maybe applying stemming
 all_txts_c_dtm <- 
-  dfm(all_txts_c,
+  dfm(tokens(all_txts_c, remove_numbers = TRUE),
       remove = stopwords("english"),
       #stem = TRUE, 
       remove_punct = TRUE)
@@ -163,7 +163,7 @@ map(time_specific_token,
 # keep only the tokens found in an English syllables dictionary
 myTokens <- 
   featnames(dfm(tokens_select(tokens(similar_words), 
-                              names(data_int_syllables))))
+                              names(nsyllable::data_syllables_en))))
 
 return(list(embedding_matrix = embedding_matrix,
             myTokens = myTokens))
